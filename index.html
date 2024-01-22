@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Moon clock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="suncalc.js"></script>
+</head>
+
+<body>
+    <moon-clock></moon-clock>
+
+    <script type="module">
+        customElements.define('moon-clock', class extends HTMLElement {
+            connectedCallback() {
+                this.attachShadow({ mode: 'open' });
+                let style = document.createElement('style');
+                let width = this.shadowRoot.host.parentElement.clientWidth;
+                let maxWidth = 800
+                width = width > maxWidth ? maxWidth : width;
+                let height = width;
+                style.textContent = `
+                    :host {
+                        width: ${width}px;
+                        height: ${height}px;
+                        display: block;
+                        margin: 0 auto;
+                    }
+                `;
+                this.shadowRoot.appendChild(style);
+
+                let canvas = document.createElement('canvas');
+                canvas.width = width
+                canvas.height = height;
+                this.ctx = canvas.getContext('2d');
+                this.radius = canvas.height / 2;
+                this.ctx.translate(this.radius, this.radius);
+                this.radius = this.radius * 0.90;
+                this.shadowRoot.appendChild(canvas);
+
+                this.drawClock();
+
+                setInterval(() => this.drawClock(), 1000 * 60);
+            }
+
+            drawClock() {
+                this.drawFace();
+                this.drawNumbers();
+                this.drawTime();
+            }
+
+            drawFace() {
+                let grad;
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+                this.ctx.fillStyle = 'white';
+                this.ctx.fill();
+
+                grad = this.ctx.createRadialGradient(0, 0, this.radius * 0.95, 0, 0, this.radius * 1.05);
+                grad.addColorStop(0, '#333');
+                grad.addColorStop(0.5, 'white');
+                grad.addColorStop(1, '#333');
+                this.ctx.strokeStyle = grad;
+                this.ctx.lineWidth = this.radius * 0.1;
+                this.ctx.stroke();
+
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, this.radius * 0.06, 0, 2 * Math.PI);
+                this.ctx.fillStyle = '#333';
+                this.ctx.fill();
+            }
+
+            drawNumbers() {
+                let ang;
+                let num;
+                this.ctx.font = this.radius * 0.15 + "px arial";
+                this.ctx.textBaseline = "middle";
+                this.ctx.textAlign = "center";
+                for (num = 1; num <= 8; num++) {
+                    ang = num * Math.PI / 4;
+                    this.ctx.rotate(ang);
+                    this.ctx.translate(0, -this.radius * 0.85);
+                    this.ctx.rotate(-ang);
+                    if (num === 1) {
+                        this.ctx.fillText('🌒', 0, 0);
+                    } else if (num === 2) {
+                        this.ctx.fillText('🌓', 0, 0);
+                    } else if (num === 3) {
+                        this.ctx.fillText('🌔', 0, 0);
+                    } else if (num === 4) {
+                        this.ctx.fillText('🌕', 0, 0);
+                    } else if (num === 5) {
+                        this.ctx.fillText('🌖', 0, 0);
+                    } else if (num === 6) {
+                        this.ctx.fillText('🌗', 0, 0);
+                    } else if (num === 7) {
+                        this.ctx.fillText('🌘', 0, 0);
+                    } else if (num === 8) {
+                        this.ctx.fillText('🌑', 0, 0);
+                    }
+                    this.ctx.rotate(ang);
+                    this.ctx.translate(0, this.radius * 0.85);
+                    this.ctx.rotate(-ang);
+                }
+            }
+
+            drawTime() {
+                let moonIllumination = SunCalc.getMoonIllumination();
+                let angle = moonIllumination.phase * 2 * Math.PI;
+                this.drawHand(angle, this.radius * 0.7, this.radius * 0.05);
+            }
+
+            drawHand(pos, length, width, color = '#333') {
+                this.ctx.beginPath();
+                this.ctx.lineWidth = width;
+                this.ctx.lineCap = "round";
+                this.ctx.strokeStyle = color;
+                this.ctx.moveTo(0, 0);
+                this.ctx.rotate(pos);
+                this.ctx.lineTo(0, -length);
+                this.ctx.stroke();
+                this.ctx.rotate(-pos);
+            }
+        });
+    </script>
+</body>
+
+</html>
