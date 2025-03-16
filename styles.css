@@ -66,12 +66,46 @@ canvas {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
     background: rgba(0, 0, 0, 0.7);
     padding: 15px;
     border-radius: 10px;
     backdrop-filter: blur(10px);
+    width: auto;
+    max-width: 90%;
+}
+
+.date-control {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.speed-control {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+input[type="range"] {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    height: 10px;
+    width: 100%;
+}
+
+#speedValue {
+    min-width: 80px;
+    text-align: right;
 }
 
 input[type="datetime-local"] {
@@ -106,12 +140,38 @@ button:hover {
     }
 
     .controls {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr;
+        width: 90%;
+        max-width: 350px;
     }
 
-    .controls input, .controls button {
+    .button-group {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        padding: 10px 16px;
+    }
+
+    .speed-control {
+        grid-template-columns: auto 1fr auto;
+        margin-top: 5px;
+    }
+}
+
+/* Add a medium-sized screen breakpoint */
+@media (min-width: 601px) {
+    .controls {
+        grid-template-columns: 1fr;
+        width: auto;
+        max-width: 500px;
+    }
+
+    #dateTimeControl {
         width: 100%;
-        max-width: 300px;
+    }
+
+    .button-group {
+        grid-template-columns: 1fr 1fr;
     }
 }
