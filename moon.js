@@ -60,9 +60,10 @@ function updateMoonPhase(date = new Date()) {
     // The phase value alone determines where in its orbit the moon is relative to the sun
     const phaseAngle = illumination.phase * Math.PI * 2;
 
-    // Position the light opposite to the phase angle
-    // This creates the correct illumination as seen from Earth
-    sunLight.position.x = -Math.sin(phaseAngle) * distance;
+    // Position the light correctly for the phase angle
+    // For waxing moon (increasing illumination), light comes from right side
+    // For waning moon (decreasing illumination), light comes from left side
+    sunLight.position.x = Math.sin(phaseAngle) * distance;
     sunLight.position.z = -Math.cos(phaseAngle) * distance;
     sunLight.position.y = 0; // Keep on ecliptic plane
 
@@ -73,7 +74,7 @@ function updateMoonPhase(date = new Date()) {
     sunLight.intensity = 1.0;
 
     // Set ambient light to a low value to slightly reveal the dark side
-    ambientLight.intensity = 0.1;
+    ambientLight.intensity = 0.03;
 
     // Update moon info display
     updateMoonInfo(date, illumination);
