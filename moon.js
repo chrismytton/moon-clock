@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import SunCalc from './vendor/suncalc.js';
 
 const scene = new THREE.Scene();
@@ -10,12 +9,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 camera.position.z = 5;
-
-// Setup the controls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.25;
-controls.enableZoom = true;
 
 // Load moon texture
 const textureLoader = new THREE.TextureLoader();
@@ -131,7 +124,6 @@ const clock = new THREE.Clock();
 
 function animate() {
     const deltaTime = clock.getDelta();
-    controls.update();
     renderer.render(scene, camera);
 }
 
