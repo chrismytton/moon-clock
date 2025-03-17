@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import SunCalc from 'suncalc';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x010101);
@@ -11,11 +10,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 camera.position.z = 5;
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.25;
-controls.enableZoom = false;
 
 // Create star field
 function createStars() {
@@ -277,8 +271,6 @@ const clock = new THREE.Clock();
 
 function animate() {
     const deltaTime = clock.getDelta();
-
-    controls.update();
 
     // Make stars twinkle
     if (stars.geometry.attributes.color) {
